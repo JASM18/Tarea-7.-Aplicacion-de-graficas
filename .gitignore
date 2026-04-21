@@ -1,0 +1,9 @@
+# Ignorar configuraciones de CLion
+.idea/
+cmake-build-*/
+
+# Ignorar configuraciones de Code::Blocks
+bin/
+obj/
+*.depend
+*.layout
