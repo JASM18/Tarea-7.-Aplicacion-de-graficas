@@ -5,11 +5,72 @@
  * \author Portugal Arreola, Marian Bethsab&eacute;
  * \date 22/04/2026
  * \code{.cpp}
- * Grafica G;
- * G.AgregarNodo("A");
- * G.AgregarNodo("B");
- * G.AgregarArista("A", "B", 5.5);
- * Grafica arbolMinimo = G.ObtenerArbolMinExp();
+#include <iostream>
+#include "Grafica.hpp"
+
+using namespace std;
+
+int main(){
+
+    try {
+        Grafica G;
+
+        cout << "-> Construyendo la gr\240fica G..." << endl;
+        G.AgregarNodo("A");
+        G.AgregarNodo("B");
+        G.AgregarNodo("C");
+        G.AgregarNodo("D");
+        G.AgregarNodo("E");
+
+        cout << "Agregando aristas con pesos..." << endl;
+        G.AgregarArista("A", "B", 2);
+        G.AgregarArista("A", "C", 3);
+        G.AgregarArista("B", "C", 1);
+        G.AgregarArista("B", "D", 4);
+        G.AgregarArista("C", "D", 5);
+        G.AgregarArista("C", "E", 6);
+        G.AgregarArista("D", "E", 7);
+
+        cout << "Gr\240fica G:\n" << G << endl;
+
+        cout << "N\243mero de nodos: " << G.ObtenerNumNodos() << endl;
+        cout << "N\243mero de aristas: " << G.ObtenerNumAristas() << endl;
+        cout << "Grado del nodo C: " << G.ObtenerGradoDeNodo("C") << endl;
+        cout << "\250Es conexa?: " << (G.EsConexo() ? "S\241" : "No") << endl;
+
+        cout << "\n-> Aplicando el algoritmo de prim (\265rbol de m\241nima expansi\242n)..." << endl;
+        if (G.EsConexo()) {
+            Grafica AME = G.ObtenerArbolMinExp();
+            cout << "Gr\240fica AME:\n" << AME << endl;
+            cout << "Costo total de aristas en MST: " << AME.ObtenerNumAristas() << " aristas." << endl;
+        }else{
+            cout << "La gr\240fica no es conexa, no se puede aplicar Prim." << endl;
+        }
+
+        cout << "\n-> Eliminando aristas y nodos..." << endl;
+        cout << "Eliminando arista B-C (peso 1)..." << endl;
+        G.EliminarArista("B", "C");
+
+        cout << "Eliminando nodo D..." << endl;
+        G.EliminarNodo("D");
+
+        cout << "Gr\240fica despu\202s de borrar:\n" << G << endl;
+
+        cout << "Vaciando la gr\240fica..." << endl;
+        G.Vaciar();
+
+        cout << "\250Est\240 vac\241a?: " << (G.EstaVacia() ? "S\241" : "No") << endl;
+
+
+    } catch (const Grafica::GraficaNoMemoria& e) {
+        cerr << "Error de memoria: " << e.what() << endl;
+    } catch (const exception& e) {
+        cerr << "Error inesperado: " << e.what() << endl;
+    }
+
+    system("pause");
+    return 0;
+}
  * \endcode
  */
 

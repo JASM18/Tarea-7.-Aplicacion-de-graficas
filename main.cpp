@@ -1,6 +1,6 @@
 /**
  * \file main.cpp
- * \brief Este archivo contiene la ejecuci&oacute;n principal y el men&uacute; interactivo para probar la clase ListaOrdenada.
+ * \brief Este archivo contiene la ejecuci&oacute;n principal y el men&uacute; interactivo para probar la clase Grafica y el algoritmo de Prim.
  * \author S&aacute;nchez Montoy, Jes&uacute;s Axel
  * \author Portugal Arreola, Marian Bethsab&eacute;
  * \date 22/04/2026
@@ -13,23 +13,26 @@
 
 using namespace std;
 
+/**
+ * \brief Opciones del men&uacute; principal para la gr&aacute;fica.
+ */
 enum Opciones_principales {
-    AGREGARNODO = 1,
-    AGREGARARISTA,
-    ELIMINARNODO,
-    ELIMINARARISTA,
-    GRADONODO,
-    NUMNODOS,
-    NUMARISTAS,
-    ESTAVACIA,
-    CONEXO,
-    VACIARNODO,
-    VACIAR,
-    BUSCARNODO,
-    BUSCARARISTA,
-    IMPRIMIR,
-    ARBOLMINEXP,
-    SALIR
+    AGREGARNODO = 1,    ///< Agrega un nuevo nodo a la gr&aacute;fica.
+    AGREGARARISTA,      ///< Crea una arista ponderada entre dos nodos.
+    ELIMINARNODO,       ///< Borra un nodo y sus aristas adyacentes.
+    ELIMINARARISTA,     ///< Borra la arista entre dos nodos.
+    GRADONODO,          ///< Muestra la cantidad de aristas de un nodo.
+    NUMNODOS,           ///< Muestra el total de nodos de la gr&aacute;fica (orden).
+    NUMARISTAS,         ///< Muestra el total de aristas de la gr&aacute;fica (tama&ntilde;o).
+    ESTAVACIA,          ///< Indica si la gr&aacute;fica no tiene nodos.
+    CONEXO,             ///< Indica si la gr&aacute;fica es conexa.
+    VACIARNODO,         ///< Elimina todas las conexiones de un nodo espec&iacute;fico.
+    VACIAR,             ///< Elimina todos los nodos y aristas de la gr&aacute;fica.
+    BUSCARNODO,         ///< Verifica si un nodo existe.
+    BUSCARARISTA,       ///< Verifica si una arista existe.
+    IMPRIMIR,           ///< Imprime la lista de adyacencia de la gr&aacute;fica.
+    ARBOLMINEXP,        ///< Calcula e imprime el &aacute;rbol de m&iacute;nima expansi&oacute;n usando Prim.
+    SALIR               ///< Termina la ejecuci&oacute;n del programa.
 };
 
 int main()
