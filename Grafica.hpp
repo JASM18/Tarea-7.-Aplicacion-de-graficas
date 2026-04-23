@@ -1,3 +1,18 @@
+/**
+ * \file Grafica.hpp
+ * \brief Este archivo contiene la definici&oacute;n de la clase Grafica para representar una gr&aacute;fica ponderada y calcular su &aacute;rbol de m&iacute;nima expansi&oacute;n.
+ * \author S&aacute;nchez Montoy, Jes&uacute;s Axel
+ * \author Portugal Arreola, Marian Bethsab&eacute;
+ * \date 22/04/2026
+ * \code{.cpp}
+ * Grafica G;
+ * G.AgregarNodo("A");
+ * G.AgregarNodo("B");
+ * G.AgregarArista("A", "B", 5.5);
+ * Grafica arbolMinimo = G.ObtenerArbolMinExp();
+ * \endcode
+ */
+
 #ifndef GRAFICA_HPP
 #define GRAFICA_HPP
 
@@ -6,83 +21,193 @@
 
 using std::string;
 
-//si intentamos agregar un vertice o una arista repetidos, no se agrega
-
-//para eliminar, primero se birran las arisras y luego el nodo
-
+/**
+ * \brief Clase que representa una gr&aacute;fica ponderada mediante listas de adyacencia.
+ */
 class Grafica {
+
+    /** \brief Sobrecarga del operador de inserci&oacute;n para imprimir la gr&aacute;fica.
+     * \param salida Flujo de salida.
+     * \param g Referencia constante a la gr&aacute;fica a imprimir.
+     * \return Referencia al flujo de salida modificado.
+     */
     friend std::ostream & operator <<(std::ostream & salida, const Grafica &g);
+
 public:
 
+    /** \brief Constructor por default que inicializa la gr&aacute;fica vac&iacute;a.
+     */
     Grafica();
+
+    /** \brief Destructor que libera la memoria de todos los nodos y aristas de la gr&aacute;fica.
+     */
     ~Grafica();
+
+    /** \brief Constructor de copias.
+     * \param grafica Referencia a la gr&aacute;fica que se copiar&aacute;.
+     */
     Grafica(const Grafica& grafica);
+
+    /** \brief Operador de asignaci&oacute;n sobrecargado.
+     * \param grafica Referencia a la gr&aacute;fica original.
+     * \return Referencia a la gr&aacute;fica actual.
+     */
     Grafica& operator=(const Grafica& grafica);
 
-    void AgregarNodo(string nombre); // LISTO
-    void AgregarArista(string origen, string destino, float peso); // LISTO
+    /** \brief Agrega un nuevo nodo a la gr&aacute;fica, pero si ya existe, no hace nada.
+     * \param nombre Cadena de caracteres con el nombre del nodo.
+     * \return void
+     * \throw GraficaNoMemoria Lanza excepci&oacute;n si falla la asignaci&oacute;n de memoria.
+     */
+    void AgregarNodo(string nombre);
 
-    bool EliminarNodo(string nombre); // LISTO
-    bool EliminarArista(string origen, string destino); // LISTO
+    /** \brief Conecta dos nodos existentes mediante una arista con un peso espec&iacute;fico.
+     * \param origen Nombre del nodo de origen.
+     * \param destino Nombre del nodo de destino.
+     * \param peso Valor que tienen las aristas.
+     * \return void
+     * \throw GraficaNoMemoria Lanza excepci&oacute;n si falla la asignaci&oacute;n de memoria.
+     */
+    void AgregarArista(string origen, string destino, float peso);
 
-    int ObtenerGradoDeNodo(string nombre) const; //LISTO
-    int ObtenerNumNodos() const; // LISTO
-    int ObtenerNumAristas() const; // LISTO
+    /** \brief Elimina un nodo de la gr&aacute;fica y todas las aristas conectadas a &eacute;l.
+     * \param nombre Nombre del nodo a eliminar.
+     * \return true si el nodo fue eliminado con &eacute;xito, false si no exist&iacute;a.
+     */
+    bool EliminarNodo(string nombre);
 
-    bool EstaVacia() const; // LISTO
+    /** \brief Elimina la arista entre dos nodos de la gr&aacute;fica.
+     * \param origen Nombre del nodo de origen.
+     * \param destino Nombre del nodo de destino.
+     * \return true si la arista se elimin&oacute; correctamente, false si no exist&iacute;a.
+     */
+    bool EliminarArista(string origen, string destino);
 
-    bool EsConexo() const; //LISTO
+    /** \brief Devuelve la cantidad de aristas conectadas a un nodo espec&iacute;fico.
+     * \param nombre Nombre del nodo del que se quiere saber su grado.
+     * \return N&uacute;mero que representa el grado del nodo, o -1 si el nodo no existe.
+     */
+    int ObtenerGradoDeNodo(string nombre) const;
 
-    void VaciarNodo(string nodo); // LISTO
-    void Vaciar(); // LISTO
+    /** \brief Consulta el n&uacute;mero total de nodos en la gr&aacute;fica.
+     * \return Cantidad actual de nodos.
+     */
+    int ObtenerNumNodos() const;
 
-    bool BuscarNodo(string nombre) const; // LISTO
-    bool BuscarArista(string origen, string destino) const; // LISTO
+    /** \brief Consulta el n&uacute;mero total de aristas en la gr&aacute;fica.
+     * \return Cantidad actual de aristas.
+     */
+    int ObtenerNumAristas() const;
 
+    /** \brief Verifica si la gr&aacute;fica se encuentra vac&iacute;a.
+     * \return true si no hay nodos, false en otro caso.
+     */
+    bool EstaVacia() const;
+
+    /** \brief Determina si la gr&aacute;fica es conexa.
+     * \return true si es conexa, false si hay nodos o subgr&aacute;ficas aisladas.
+     */
+    bool EsConexo() const;
+
+    /** \brief Elimina todas las aristas de un nodo.
+     * \param nodo Nombre del nodo que se va a vaciar.
+     * \return void
+     */
+    void VaciarNodo(string nodo);
+
+    /** \brief Vac&iacute;a la gr&aacute;fica, borrando nodos y aristas.
+     * \return void
+     */
+    void Vaciar();
+
+    /** \brief Busca si un nodo existe dentro de la estructura de la gr&aacute;fica.
+     * \param nombre Nombre del nodo a buscar.
+     * \return true si existe, false si no.
+     */
+    bool BuscarNodo(string nombre) const;
+
+    /** \brief Verifica si existe una arista entre dos nodos.
+     * \param origen Nombre del primer nodo.
+     * \param destino Nombre del segundo nodo.
+     * \return true si la arista existe, false de lo contrario.
+     */
+    bool BuscarArista(string origen, string destino) const;
+
+    /** \brief Imprime los nodos y sus listas de adyacencia.
+     * \return void
+     */
     void Imprimir() const;
 
+    /** \brief Usa el algoritmo de Prim para encontrar y devolver un &aacute;rbol de m&iacute;nima expansi&oacute;n.
+     * \return Un objeto de tipo Grafica que representa el &aacute;rbol generador de peso m&iacute;nimo.
+     *         Si la gr&aacute;fica no es conexa, el &aacute;rbol quedar&aacute; incompleto o vac&iacute;o.
+     */
     Grafica ObtenerArbolMinExp() const;
 
+    /**
+     * \brief Descripci&oacute;n de la clase: Excepci&oacute;n lanzada cuando ocurren fallos de memoria din&aacute;mica.
+     */
     class GraficaNoMemoria : public std::exception {
     public:
+        /** \brief Constructor por defecto de la excepci&oacute;n GraficaNoMemoria.
+         */
         GraficaNoMemoria() throw();
 
+        /** \brief Devuelve una descripci&oacute;n del error cuando no haya memoria disponible.
+         * \return Cadena de caracteres con el mensaje de error.
+         */
         virtual const char *what() const throw();
     };
 
 private:
-    int numNodos;
-    int numAristas;
+    int numNodos;           ///< Cantidad total de nodos en la gr&aacute;fica.
+    int numAristas;         ///< Cantidad total de aristas en la gr&aacute;fica.
 
-    struct Arista;
+    struct Arista;          // Declaraci&oacute; para su uso en Nodo.
 
+    /**
+     * \brief Estructura interna que representa un v&eacute;rtice de la gr&aacute;fica y su lista de adyacencia.
+     */
     struct Nodo {
+        string Nombre;      ///< Nombre &uacute;nico del nodo.
+        int grado;          ///< Cantidad de aristas conectadas al nodo.
 
-        string Nombre;
-        int grado;
+        Arista *primero;    ///< Puntero a la primera arista de la lista de adyacencia del nodo.
+        Arista *ultima;     ///< Puntero a la &uacute;ltima arista de la lista de adyacencia del nodo.
 
-        Arista *primero;
-        Arista *ultima;
+        Nodo *siguiente;    ///< Puntero al siguiente nodo en la lista principal de la gr&aacute;fica.
 
-        Nodo *siguiente;
-
+        /** \brief Constructor de la estructura Nodo.
+         * \param nom Nombre o identificador del nodo.
+         * \param sig Puntero al nodo siguiente en la lista.
+         */
         Nodo(string nom, Nodo *sig = nullptr);
     };
 
+    /**
+     * \brief Estructura interna que representa una arista ponderada entre dos nodos.
+     */
     struct Arista {
+        Nodo *adyacente;    ///< Puntero al nodo destino con el cual se establece la arista.
+        Arista *siguiente;  ///< Puntero a la siguiente arista en la lista de adyacencia.
+        float peso;         ///< Costo, distancia o peso de recorrer esta arista.
 
-        Nodo *adyacente;
-
-        Arista *siguiente;
-        float peso;
-
+        /** \brief Constructor de la estructura Arista.
+         * \param ady Puntero al nodo destino.
+         * \param sig Puntero a la siguiente arista de la lista.
+         * \param p Peso num&eacute;rico de la arista.
+         */
         Arista(Nodo* ady, Arista* sig = nullptr, float p = 0);
     };
 
-    Nodo *primero;
-    Nodo *ultimo;
+    Nodo *primero;          ///< Puntero al primer nodo de la lista general de la gr&aacute;fica.
+    Nodo *ultimo;           ///< Puntero al &uacute;ltimo nodo de la lista general de la gr&aacute;fica.
 
-    Nodo* obtenerDireccDeUnNodo(string nombre) const; // LISTO
+    /** \brief M&eacute;todo auxiliar que localiza en memoria un nodo seg&uacute;n su nombre.
+     * \param nombre Nombre del nodo a buscar.
+     * \return Puntero al objeto Nodo, o nullptr si no fue encontrado.
+     */
+    Nodo* obtenerDireccDeUnNodo(string nombre) const;
 };
 
 #endif // GRAFICA_HPP

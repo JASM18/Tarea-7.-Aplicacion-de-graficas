@@ -1,3 +1,11 @@
+/**
+ * \file Grafica.cpp
+ * \brief Este archivo contiene la implementaci&oacute;n de los m&eacute;todos de la clase Grafica.
+ * \author S&aacute;nchez Montoy, Jes&uacute;s Axel
+ * \author Portugal Arreola, Marian Bethsab&eacute;
+ * \date 22/04/2026
+ */
+
 #include "Grafica.hpp"
 
 #include <iostream>
