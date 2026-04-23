@@ -20,7 +20,7 @@ public:
     Grafica& operator=(const Grafica& grafica);
 
     void AgregarNodo(string nombre); // LISTO
-    void AgregarArista(string origen, string destino); // LISTO
+    void AgregarArista(string origen, string destino, float peso); // LISTO
 
     bool EliminarNodo(string nombre); // LISTO
     bool EliminarArista(string origen, string destino); // LISTO
@@ -41,6 +41,7 @@ public:
 
     void Imprimir() const;
 
+    Grafica ObtenerArbolMinExp() const;
 
     class GraficaNoMemoria : public std::exception {
     public:
@@ -73,8 +74,9 @@ private:
         Nodo *adyacente;
 
         Arista *siguiente;
+        float peso;
 
-        Arista(Nodo* ady, Arista* sig = nullptr);
+        Arista(Nodo* ady, Arista* sig = nullptr, float p = 0);
     };
 
     Nodo *primero;

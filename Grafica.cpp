@@ -60,7 +60,7 @@ Grafica& Grafica::operator=(const Grafica& grafica)
         Arista *aristaVis = visitado->primero;
         while(aristaVis != nullptr){
 
-            AgregarArista(visitado->Nombre, aristaVis->adyacente->Nombre);
+            AgregarArista(visitado->Nombre, aristaVis->adyacente->Nombre, aristaVis->peso);
             aristaVis = aristaVis->siguiente;
         }
         visitado = visitado->siguiente;
@@ -101,7 +101,7 @@ void Grafica::AgregarNodo(string nombre)
 
 //***********************************
 
-void Grafica::AgregarArista(string origen, string destino)
+void Grafica::AgregarArista(string origen, string destino, float peso)
 {
     // Condiciones:
     // 1. Eviar ciclos (que el origen sea igual al destino)
@@ -122,7 +122,7 @@ void Grafica::AgregarArista(string origen, string destino)
     // -> Crear la conexion del origen al destino y del destino al origen
 
     try{
-        Arista* nuevaAristaOrigDest = new Arista(nodoDestino);
+        Arista* nuevaAristaOrigDest = new Arista(nodoDestino, nullptr, peso);
 
         if(nodoOrigen->primero == nullptr){ // No hay aristas!
 
@@ -135,7 +135,7 @@ void Grafica::AgregarArista(string origen, string destino)
 
         ++nodoOrigen->grado;
 
-        Arista* nuevaAristaDestOrig = new Arista(nodoOrigen);
+        Arista* nuevaAristaDestOrig = new Arista(nodoOrigen, nullptr, peso);
 
         if(nodoDestino->primero == nullptr){ // No hay aristas!
 
@@ -147,6 +147,7 @@ void Grafica::AgregarArista(string origen, string destino)
         }
 
         ++nodoDestino->grado;
+
         ++numAristas;
     }catch(const std::bad_alloc&){
         throw GraficaNoMemoria();
@@ -399,6 +400,55 @@ void Grafica::Imprimir() const
 }
 
 //***********************************
+
+Grafica Grafica::ObtenerArbolMinExp() const
+{
+    Grafica T;
+    if (EstaVacia()) return T;
+
+    T.AgregarNodo(primero->Nombre);
+
+    while (numNodos > T.ObtenerNumNodos()){
+        Nodo *visitado = primero;
+
+        float menorpeso = 999999999.0;
+        string nomOrigen = "";
+        string nomDestino = "";
+
+        // recorremos todos los nodos de G
+        while (visitado != nullptr){
+
+            //buscamos si visitado ya está en T para poder usar las aristas de T
+            if (T.BuscarNodo(visitado->Nombre)){
+
+                Arista *visitadoArista = visitado->primero;
+
+                while (visitadoArista != nullptr){
+                    if (!T.BuscarNodo(visitadoArista->adyacente->Nombre)){
+                        if (visitadoArista->peso < menorpeso){
+                            menorpeso = visitadoArista->peso;
+                            nomOrigen = visitado->Nombre;
+                            nomDestino = visitadoArista->adyacente->Nombre;
+                        }
+                    }
+                    visitadoArista = visitadoArista->siguiente;
+                }
+            }
+            visitado = visitado->siguiente;
+        }
+
+        if (nomOrigen != ""){
+            T.AgregarNodo(nomDestino);
+            T.AgregarArista(nomOrigen, nomDestino, menorpeso);
+        }else{
+            break;
+        }
+    }
+
+    return T;
+}
+
+//***********************************
 // EXCEPCIONES
 //***********************************
 
@@ -419,7 +469,7 @@ Grafica::Nodo::Nodo(string nom, Nodo *sig /*= nullptr*/) : Nombre(nom), siguient
 
 //***********************************
 
-Grafica::Arista::Arista(Nodo* ady, Arista* sig /*= nullptr*/) : adyacente(ady), siguiente(sig) {};
+Grafica::Arista::Arista(Nodo* ady, Arista* sig /*= nullptr*/, float p /* = 0 */) : adyacente(ady), siguiente(sig), peso(p) {};
 
 //***********************************
 // Métodos privados de la clase

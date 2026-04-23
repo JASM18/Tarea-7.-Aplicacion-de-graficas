@@ -1,3 +1,5 @@
+#include "Grafica.hpp"
+
 #include <iostream>
 
 using namespace std;
